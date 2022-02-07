@@ -1,0 +1,22 @@
+{
+  "name": "bot-comsci-coffee-shop",
+  "version": "1.0.0",
+  "description": "Webhook for Line chatbot and Backend for LIFF - Comsci Coffee Shop",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "author": "Jaruwat Thongchana",
+  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^7.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "firebase-admin": "^10.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "packageManager": "yarn@3.1.1"
+}
