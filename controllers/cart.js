@@ -74,7 +74,6 @@ async function addCart(req, res) {
 
 async function deleteCart(req, res) {
   const userId = req.body.lineId
-
   const itemDel = req.body.data
 
   const type = itemDel.coffeeId === undefined ? 'bakeries' : 'coffees'
