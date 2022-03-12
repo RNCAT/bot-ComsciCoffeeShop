@@ -1,32 +1,9 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-shadow */
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const db = require('./models/firebase')
+/* eslint-disable no-param-reassign */
+const db = require('../models/firebase')
 
-// const client = require('./models/line')
-const userController = require('./controllers/user')
-const botController = require('./controllers/bot')
-// const productController = require('./controllers/product')
-const cartController = require('./controllers/cart')
-
-const app = express()
-const port = process.env.PORT || 3001
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
-
-app.post('/user/:userid', userController.register)
-app.delete('/user/:userid', userController.logout)
-
-app.post('/bot', botController.menu)
-
-app.get('/products/:userId', (req, res) => {
-  const { userId } = req.params
+async function getProducts(req, res) {
+  const { userID } = req.params
 
   try {
     const productPath = '/Products/'
@@ -40,8 +17,8 @@ app.get('/products/:userId', (req, res) => {
         const cartPath = '/Cart/'
         const cartdb = db.ref(cartPath)
 
-        cartdb.child(userId).once('value', async (snapshot) => {
-          const cart = snapshot.val()
+        cartdb.child(userID).once('value', async (snapshots) => {
+          const cart = snapshots.val()
 
           await prods.coffees.forEach((coff) => {
             let qty = 0
@@ -58,6 +35,7 @@ app.get('/products/:userId', (req, res) => {
           await prods.bakeries.forEach((baker) => {
             let qty = 0
             if (cart && cart.bakeries) {
+              // eslint-disable-next-line no-return-assign
               Object.keys(cart.bakeries).map((key) =>
                 cart.bakeries[key].bakeryId === baker.bakeryId ? (qty += cart.bakeries[key].qty) : 0
               )
@@ -73,11 +51,8 @@ app.get('/products/:userId', (req, res) => {
       }
     )
   } catch (err) {
-    // console.log(err)
     return err
   }
-})
-app.post('/cart', cartController.addCart)
-app.delete('/cart', cartController.deleteCart)
+}
 
-app.listen(port, () => console.log(`listening at http://localhost:${port}`))
+module.exports = { getProducts }
