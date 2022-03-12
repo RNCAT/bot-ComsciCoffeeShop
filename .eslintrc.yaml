@@ -14,3 +14,7 @@ settings:
     - import
 parserOptions:
   ecmaVersion: latest
+rules:
+  no-return-assign: off
+  no-param-reassign: off
+  consistent-return: off
