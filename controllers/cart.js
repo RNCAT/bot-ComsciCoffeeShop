@@ -1,3 +1,6 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-inner-declarations */
+/* eslint-disable no-useless-catch */
 /* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
 /* eslint-disable no-return-assign */
@@ -111,7 +114,55 @@ async function deleteCart(req, res) {
   }
 }
 
+async function getCart(userId) {
+  try {
+    const cartPath = '/Cart/'
+    const cartdb = db.ref(cartPath)
+
+    const snapshot = await cartdb.child(userId).once('value') // ,async function(snapshot) {
+
+    const cart = await snapshot.val()
+
+    const coffeeArray = []
+    const bakeryArray = []
+
+    if (cart) {
+      if (cart.coffees) {
+        await Object.keys(cart.coffees).map((key) => {
+          coffeeArray.push(cart.coffees[key])
+        })
+
+        function compare(a, b) {
+          if (a.coffeeId < b.coffeeId) {
+            return -1
+          }
+          if (a.coffeeId > b.coffeeId) {
+            return 1
+          }
+          return 0
+        }
+
+        coffeeArray.sort(compare)
+      }
+
+      if (cart.bakeries) {
+        await Object.keys(cart.bakeries).map((key) => {
+          bakeryArray.push(cart.bakeries[key])
+        })
+      }
+    }
+
+    const cartData = { coffees: coffeeArray, bakeries: bakeryArray }
+
+    return cartData
+  } catch (err) {
+    // console.log(err)
+    throw err
+  }
+}
+
 module.exports = {
+  getCart,
   addCart,
   deleteCart,
 }

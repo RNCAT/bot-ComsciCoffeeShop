@@ -1,4 +1,6 @@
 const client = require('../models/line')
+const cartController = require('./cart')
+const message = require('../message')
 
 async function menu(req, res) {
   if (!Array.isArray(req.body.events)) {
@@ -10,7 +12,7 @@ async function menu(req, res) {
   }
 
   const { type, replyToken } = req.body.events[0]
-  // const { userId } = req.body.events[0].source
+  const { userId } = req.body.events[0].source
   const messageType = req.body.events[0].message.type
   const { text } = req.body.events[0].message
 
@@ -48,6 +50,9 @@ async function menu(req, res) {
         case 'text':
           if (text === 'แสดงเมนูของร้าน') {
             await client.replyMessage(replyToken, menuMessage)
+          } else if (text === 'แสดงข้อมูลสินค้าในตระกร้า') {
+            const msg = await message.cart_data(cartController.getCart, userId)
+            client.replyMessage(replyToken, msg)
           }
 
           break
