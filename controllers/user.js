@@ -40,12 +40,19 @@ async function logout(req, res) {
 async function getUserPoint(userID) {
   const userPath = `/Users/${userID}`
 
-  const users = await db.ref(userPath)
+  const users = db.ref(userPath)
 
   const snapshot = await users.once('value')
   const { point } = await snapshot.val()
 
   return { users, point }
+}
+
+async function getUserPoints(req, res) {
+  const { userid } = req.params
+  const { point } = await getUserPoint(userid)
+
+  return res.status(200).json({ point })
 }
 
 async function increaseUserPoint(userID, newPoint) {
@@ -71,4 +78,4 @@ async function decreaseUserPoint(userID, newPoint) {
     console.log(error)
   }
 }
-module.exports = { register, logout, getUserPoint, increaseUserPoint, decreaseUserPoint }
+module.exports = { register, logout, getUserPoints, increaseUserPoint, decreaseUserPoint }
