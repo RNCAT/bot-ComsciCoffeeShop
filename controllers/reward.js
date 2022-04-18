@@ -15,49 +15,49 @@ async function getReward(req, res) {
   const rewardCode = await genCode()
 
   await client.pushMessage(userId, {
-    messages: [
-      {
-        type: 'bubble',
-        body: {
-          type: 'box',
-          layout: 'baseline',
-          contents: [
-            {
-              type: 'icon',
-              url: 'https://cdn-icons.flaticon.com/png/512/2575/premium/2575375.png?token=exp=1649780977~hmac=f4f6d852e9f93dd05125d8dcec2eeeb5',
-              size: 'xxl',
-              margin: 'none',
-            },
-            {
-              type: 'text',
-              text: rewardName,
-              weight: 'bold',
-              size: 'xl',
-              align: 'center',
-            },
-            {
-              type: 'icon',
-              url: 'https://cdn-icons.flaticon.com/png/512/2575/premium/2575375.png?token=exp=1649780977~hmac=f4f6d852e9f93dd05125d8dcec2eeeb5',
-              size: 'xxl',
-            },
-          ],
-          backgroundColor: '#D49E7E',
-        },
-        footer: {
-          type: 'box',
-          layout: 'vertical',
-          spacing: 'sm',
-          contents: [
-            {
-              type: 'text',
-              text: rewardCode,
-              align: 'center',
-            },
-          ],
-          flex: 0,
-        },
+    type: 'flex',
+    altText: 'this is a flex message',
+    contents: {
+      type: 'bubble',
+      body: {
+        type: 'box',
+        layout: 'baseline',
+        contents: [
+          {
+            type: 'icon',
+            url: 'https://cdn-icons.flaticon.com/png/512/2575/premium/2575375.png?token=exp=1649780977~hmac=f4f6d852e9f93dd05125d8dcec2eeeb5',
+            size: 'xxl',
+            margin: 'none',
+          },
+          {
+            type: 'text',
+            text: rewardName,
+            weight: 'bold',
+            size: 'xl',
+            align: 'center',
+          },
+          {
+            type: 'icon',
+            url: 'https://cdn-icons.flaticon.com/png/512/2575/premium/2575375.png?token=exp=1649780977~hmac=f4f6d852e9f93dd05125d8dcec2eeeb5',
+            size: 'xxl',
+          },
+        ],
+        backgroundColor: '#D49E7E',
       },
-    ],
+      footer: {
+        type: 'box',
+        layout: 'vertical',
+        spacing: 'sm',
+        contents: [
+          {
+            type: 'text',
+            text: rewardCode,
+            align: 'center',
+          },
+        ],
+        flex: 0,
+      },
+    },
   })
 
   return res.status(201).end()
