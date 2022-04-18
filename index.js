@@ -6,6 +6,7 @@ const userController = require('./controllers/user')
 const botController = require('./controllers/bot')
 const productController = require('./controllers/product')
 const cartController = require('./controllers/cart')
+const rewardController = require('./controller/reward')
 
 const app = express()
 const port = process.env.PORT || 3001
@@ -22,5 +23,7 @@ app.post('/bot', botController.menu)
 app.get('/products/:userId', productController.getProducts)
 app.post('/cart', cartController.addCart)
 app.delete('/cart', cartController.deleteCart)
+
+app.post('/reward', rewardController.getReward)
 
 app.listen(port, () => console.log(`listening at http://localhost:${port}`))

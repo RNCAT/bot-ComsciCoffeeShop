@@ -234,7 +234,7 @@ module.exports.cart_data = async function () {
       },
     ]
 
-    return msg
+    return { msg, total }
   }
   const msg = {
     type: 'text',

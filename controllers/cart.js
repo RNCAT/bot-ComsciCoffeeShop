@@ -161,8 +161,13 @@ async function getCart(userId) {
   }
 }
 
+async function calculatePoint(total) {
+  return Math.floor(total / 10)
+}
+
 module.exports = {
   getCart,
   addCart,
   deleteCart,
+  calculatePoint,
 }

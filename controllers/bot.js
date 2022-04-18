@@ -1,5 +1,6 @@
 const client = require('../models/line')
 const cartController = require('./cart')
+const userController = require('./user')
 const message = require('../message')
 
 async function menu(req, res) {
@@ -51,7 +52,12 @@ async function menu(req, res) {
           if (text === 'แสดงเมนูของร้าน') {
             await client.replyMessage(replyToken, menuMessage)
           } else if (text === 'แสดงข้อมูลสินค้าในตระกร้า') {
-            const msg = await message.cart_data(cartController.getCart, userId)
+            const { msg, total } = await message.cart_data(cartController.getCart, userId)
+
+            const point = await cartController.calculatePoint(total)
+
+            await userController.increaseUserPoint(userId, point)
+
             client.replyMessage(replyToken, msg)
           }
 

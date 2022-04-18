@@ -6,18 +6,21 @@ async function register(req, res) {
   const { lineId, lineName, firstName, lastName, phone, address } = req.body
   const userPath = `/Users/${userID}`
 
+  console.log(req.body)
+
   const registeredRichMenu = process.env.RICHMENU_ID
 
   const users = db.ref(userPath)
   if (!users) return res.send(`Can't connect users path`)
 
   try {
-    await users.update({ lineId, lineName, firstName, lastName, phone, address })
+    await users.update({ lineId, lineName, firstName, lastName, phone, address, point: 0 })
 
     await client.linkRichMenuToUser(userID, registeredRichMenu)
 
     return res.status(200).end()
   } catch (error) {
+    console.log(error)
     return res.send(`Data could not be saved. ${error}`)
   }
 }
@@ -34,4 +37,38 @@ async function logout(req, res) {
   }
 }
 
-module.exports = { register, logout }
+async function getUserPoint(userID) {
+  const userPath = `/Users/${userID}`
+
+  const users = await db.ref(userPath)
+
+  const snapshot = await users.once('value')
+  const { point } = await snapshot.val()
+
+  return { users, point }
+}
+
+async function increaseUserPoint(userID, newPoint) {
+  const { users, point } = await getUserPoint(userID)
+
+  const latestPoint = point + Number(newPoint)
+
+  try {
+    await users.update({ point: latestPoint })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function decreaseUserPoint(userID, newPoint) {
+  const { users, point } = await getUserPoint(userID)
+
+  const latestPoint = point - Number(newPoint)
+
+  try {
+    await users.update({ point: latestPoint })
+  } catch (error) {
+    console.log(error)
+  }
+}
+module.exports = { register, logout, getUserPoint, increaseUserPoint, decreaseUserPoint }
